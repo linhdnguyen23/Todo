@@ -2,6 +2,7 @@ package com.example.todo;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     EditText etItem;
     RecyclerView rvItems;
     ItemsAdapter itemsAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,25 +46,13 @@ public class MainActivity extends AppCompatActivity {
         ItemsAdapter.OnLongClickListener onLongClickListener =  new ItemsAdapter.OnLongClickListener() {
             @Override
             public void onItemLongClicked(int position) {
-                // delete item
-                items.remove(position);
-                // notify the adapter
-                itemsAdapter.notifyItemRemoved(position);
-                Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
-                saveItems();
+                deleteItemAt(position);
             }
         };
         ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
             @Override
             public void onItemClicked(int position) {
-                // Create a new activity (edit activity)
-                Intent i = new Intent(MainActivity.this, EditActivity.class);
-                i.putExtra(KEY_ITEM_TEXT, items.get(position));
-                i.putExtra(KEY_ITEM_POSITION, position);
-                // pass the data being edited
-                // display updated data
-                startActivityForResult(i, EDIT_TEXT_CODE);
-                Log.d("Main Activity", "single click at position " + position);
+                editItemAt(position);
             }
         };
         itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
@@ -75,13 +63,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String todoItem = etItem.getText().toString();
-                // add items to the model
-                items.add(todoItem);
-                // notify adapter that an item is inserted
-                itemsAdapter.notifyItemInserted(items.size() - 1);
-                etItem.setText("");
-                Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
-                saveItems();
+                if (todoItem.trim().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Todo content cannot be only whitespace", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    addItem(todoItem);
+                }
             }
         });
     }
@@ -120,5 +107,36 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("MainActivity", "Error writing items", e);
         }
+    }
+    private void deleteItemAt(int itemPos) {
+        // delete item
+        items.remove(itemPos);
+        // notify the adapter to remove item
+        itemsAdapter.notifyItemRemoved(itemPos);
+        Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
+        saveItems();
+    }
+    private void editItemAt(int itemPos) {
+        // Create a new activity (edit activity)
+        Intent i = new Intent(MainActivity.this, EditActivity.class);
+        i.putExtra(KEY_ITEM_TEXT, items.get(itemPos));
+        i.putExtra(KEY_ITEM_POSITION, itemPos);
+        // pass the data being edited
+        // display updated data
+        startActivityForResult(i, EDIT_TEXT_CODE);
+    }
+    private void addItem(String todoItem) {
+        // add items to the model
+        items.add(todoItem);
+        // notify adapter that an item is inserted
+        itemsAdapter.notifyItemInserted(items.size() - 1);
+        etItem.setText("");
+        Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
+        saveItems();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(rvItems.getContext());
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rvItems.getContext(),
+                mLayoutManager.getOrientation());
+        rvItems.addItemDecoration(mDividerItemDecoration);
+
     }
 }
