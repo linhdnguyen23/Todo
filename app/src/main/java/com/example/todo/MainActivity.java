@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     addItem(todoItem);
                 }
+                etItem.setText("");
             }
         });
     }
@@ -134,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         items.add(todoItem);
         // notify adapter that an item is inserted
         itemsAdapter.notifyItemInserted(items.size() - 1);
-        etItem.setText("");
         Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
         saveItems();
     }
