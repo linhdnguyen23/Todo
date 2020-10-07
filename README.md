@@ -18,7 +18,7 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-* [x] Style app using with [Tonton Friends](https://tontonforest.com/) theme!
+* [x] Style app using with [Tonton Friends](https://tontonforest.com/) theme, and make app look nice (padding, list divider)
 * [ ] Add some animation to make layout change less abrupt
 * [ ] Change font size
 * [ ] Make the action bar transparent

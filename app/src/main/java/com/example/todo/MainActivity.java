@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
         rvItems.setAdapter(itemsAdapter);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(rvItems.getContext());
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rvItems.getContext(),
+                mLayoutManager.getOrientation());
+        rvItems.addItemDecoration(mDividerItemDecoration);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,10 +137,5 @@ public class MainActivity extends AppCompatActivity {
         etItem.setText("");
         Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
         saveItems();
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(rvItems.getContext());
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rvItems.getContext(),
-                mLayoutManager.getOrientation());
-        rvItems.addItemDecoration(mDividerItemDecoration);
-
     }
 }
